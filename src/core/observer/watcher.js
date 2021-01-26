@@ -68,10 +68,12 @@ export default class Watcher {
     this.id = ++uid // uid for batching
     this.active = true
     this.dirty = this.lazy // for lazy watchers
+
     this.deps = []
     this.newDeps = []
     this.depIds = new Set()
     this.newDepIds = new Set()
+
     this.expression = process.env.NODE_ENV !== 'production'
       ? expOrFn.toString()
       : ''
@@ -99,11 +101,11 @@ export default class Watcher {
    * Evaluate the getter, and re-collect dependencies.
    */
   get () {
-    pushTarget(this)
+    pushTarget(this) // 设置 target
     let value
     const vm = this.vm
     try {
-      value = this.getter.call(vm, vm)
+      value = this.getter.call(vm, vm) // 触发 getter，收集依赖
     } catch (e) {
       if (this.user) {
         handleError(e, vm, `getter for watcher "${this.expression}"`)
@@ -116,7 +118,7 @@ export default class Watcher {
       if (this.deep) {
         traverse(value)
       }
-      popTarget()
+      popTarget() // 清除 target
       this.cleanupDeps()
     }
     return value
@@ -160,6 +162,7 @@ export default class Watcher {
   /**
    * Subscriber interface.
    * Will be called when a dependency changes.
+   * notify 调用该函数，也就意味着依赖更新的时候会调用 watcher
    */
   update () {
     /* istanbul ignore else */
@@ -191,6 +194,7 @@ export default class Watcher {
         const oldValue = this.value
         this.value = value
         if (this.user) {
+          // 手动 watcher的callback
           try {
             this.cb.call(this.vm, value, oldValue)
           } catch (e) {

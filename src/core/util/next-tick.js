@@ -10,6 +10,15 @@ export let isUsingMicroTask = false
 const callbacks = []
 let pending = false
 
+// nextTick 可以类比 Nodejs 中的 nextTick
+
+// Mico stack won't be touch if stack isn't empty. Macro stack won't be touch if micro stack isn't empty OR do not require any execution.
+// 意味着执行微任务的前一步 stack 是已经被清空的。
+// https://stackoverflow.com/questions/25915634/difference-between-microtask-and-macrotask-within-an-event-loop-context
+
+/**
+ * @desc 清空所有回调函数
+ */
 function flushCallbacks () {
   pending = false
   const copies = callbacks.slice(0)
@@ -86,6 +95,8 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
 
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+
+  // 包裹并添加回调函数，将会在微任务或者任务执行
   callbacks.push(() => {
     if (cb) {
       try {
@@ -99,9 +110,10 @@ export function nextTick (cb?: Function, ctx?: Object) {
   })
   if (!pending) {
     pending = true
-    timerFunc()
+    timerFunc() // 执行完会重置成 false
   }
   // $flow-disable-line
+  // 没有传 cb 就返回 Promise，兼容 cb 和 Promise
   if (!cb && typeof Promise !== 'undefined') {
     return new Promise(resolve => {
       _resolve = resolve

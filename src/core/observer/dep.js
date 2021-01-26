@@ -17,23 +17,35 @@ export default class Dep {
 
   constructor () {
     this.id = uid++
-    this.subs = []
+    this.subs = [] // 存放 watcher实例数组
   }
 
+  /**
+   * @desc 添加 sub
+   * @param {*} sub
+   */
   addSub (sub: Watcher) {
     this.subs.push(sub)
   }
 
+  /**
+   * @desc 移除 sub
+   * @param {*} sub
+   */
   removeSub (sub: Watcher) {
     remove(this.subs, sub)
   }
 
+
   depend () {
     if (Dep.target) {
-      Dep.target.addDep(this)
+      Dep.target.addDep(this) // watcher 上的 addDep
     }
   }
 
+  /**
+   * @desc 执行更新，运行 sub 中 watch 实例的数组方法
+   */
   notify () {
     // stabilize the subscriber list first
     const subs = this.subs.slice()

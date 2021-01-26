@@ -66,6 +66,7 @@ if (inBrowser && !isIE) {
 }
 
 /**
+ * @desc 执行 watcher 队列
  * Flush both queues and run the watchers.
  */
 function flushSchedulerQueue () {
@@ -157,6 +158,7 @@ function callActivatedHooks (queue) {
 }
 
 /**
+ * @desc watcher 排队等待执行
  * Push a watcher into the watcher queue.
  * Jobs with duplicate IDs will be skipped unless it's
  * pushed when the queue is being flushed.

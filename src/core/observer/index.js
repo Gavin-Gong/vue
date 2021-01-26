@@ -46,6 +46,7 @@ export class Observer {
     def(value, '__ob__', this)
     if (Array.isArray(value)) {
       if (hasProto) {
+        // 设置 __proto__
         protoAugment(value, arrayMethods)
       } else {
         copyAugment(value, arrayMethods, arrayKeys)
@@ -69,7 +70,7 @@ export class Observer {
   }
 
   /**
-   * Observe a list of Array items.
+   * @desc Observe a list of Array items.
    */
   observeArray (items: Array<any>) {
     for (let i = 0, l = items.length; i < l; i++) {
@@ -194,6 +195,7 @@ export function defineReactive (
 }
 
 /**
+ * @desc 设置新属性用
  * Set a property on an object. Adds the new property and
  * triggers change notification if the property doesn't
  * already exist.
@@ -204,11 +206,13 @@ export function set (target: Array<any> | Object, key: any, val: any): any {
   ) {
     warn(`Cannot set reactive property on undefined, null, or primitive value: ${(target: any)}`)
   }
+  // 数组的 set
   if (Array.isArray(target) && isValidArrayIndex(key)) {
     target.length = Math.max(target.length, key)
     target.splice(key, 1, val)
     return val
   }
+  // 已有对象
   if (key in target && !(key in Object.prototype)) {
     target[key] = val
     return val

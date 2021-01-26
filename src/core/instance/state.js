@@ -35,6 +35,12 @@ const sharedPropertyDefinition = {
   set: noop
 }
 
+/**
+ * @desc this.[key] -> this.[sourceKey][key]
+ * @param {*} target
+ * @param {*} sourceKey
+ * @param {*} key
+ */
 export function proxy (target: Object, sourceKey: string, key: string) {
   sharedPropertyDefinition.get = function proxyGetter () {
     return this[sourceKey][key]
@@ -45,6 +51,10 @@ export function proxy (target: Object, sourceKey: string, key: string) {
   Object.defineProperty(target, key, sharedPropertyDefinition)
 }
 
+/**
+ * @desc 初始化 props methods data computed watch
+ * @param {*} vm
+ */
 export function initState (vm: Component) {
   vm._watchers = []
   const opts = vm.$options
@@ -166,6 +176,11 @@ export function getData (data: Function, vm: Component): any {
 
 const computedWatcherOptions = { lazy: true }
 
+/**
+ * @description 初始化计算属性
+ * @param {*} vm
+ * @param {*} computed
+ */
 function initComputed (vm: Component, computed: Object) {
   // $flow-disable-line
   const watchers = vm._computedWatchers = Object.create(null)
