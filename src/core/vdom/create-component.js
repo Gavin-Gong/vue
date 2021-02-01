@@ -222,9 +222,13 @@ export function createComponentInstanceForVnode (
     options.render = inlineTemplate.render
     options.staticRenderFns = inlineTemplate.staticRenderFns
   }
-  return new vnode.componentOptions.Ctor(options)
+  return new vnode.componentOptions.Ctor(options)                                                                                                                                              .componentOptions.Ctor(options)
 }
 
+/**
+ * @desc 组装并merge 组件自有hook和user hook
+ * @param {*} data
+ */
 function installComponentHooks (data: VNodeData) {
   const hooks = data.hook || (data.hook = {})
   for (let i = 0; i < hooksToMerge.length; i++) {
@@ -249,6 +253,11 @@ function mergeHook (f1: any, f2: any): Function {
 
 // transform component v-model info (value and callback) into
 // prop and event handler respectively.
+/**
+ * @desc 将 v-model 转化为 vnode 属性值
+ * @param {*} options
+ * @param {*} data
+ */
 function transformModel (options, data: any) {
   const prop = (options.model && options.model.prop) || 'value'
   const event = (options.model && options.model.event) || 'input'
@@ -262,6 +271,8 @@ function transformModel (options, data: any) {
         ? existing.indexOf(callback) === -1
         : existing !== callback
     ) {
+      // 1. existing 为数组 && cb 不在数组内部
+      // 2. existing 不为数组 && existing 不为 callback
       on[event] = [callback].concat(existing)
     }
   } else {

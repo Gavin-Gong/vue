@@ -435,6 +435,7 @@ export function mergeOptions (
 }
 
 /**
+ * @desc 本名 -》 小驼峰 -》 大驼峰 -》 原型链
  * Resolve an asset.
  * This function is used because child instances need access
  * to assets defined in its ancestor chain.
